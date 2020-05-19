@@ -39,8 +39,8 @@ export default function ProminentAppBar() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <div className={classes.toolbar}></div>
+    <React.Fragment>
+      <Toolbar className={classes.toolbar}></Toolbar>
       <AppBar>
         <Toolbar className={classes.toolbar}>
           <IconButton
@@ -62,6 +62,6 @@ export default function ProminentAppBar() {
         </Toolbar>
         <FloatingActionButton/>
       </AppBar>
-    </div>
+    </React.Fragment>
   );
 }
