@@ -8,7 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import FloatingActionButton from './FloatingActionButton';
-import colors, { PRIMARY, BLACK, GRAY_DARK, GRAY_MEDIUM } from './../styles/colors';
+import { PRIMARY, GRAY_DARK } from './../colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
