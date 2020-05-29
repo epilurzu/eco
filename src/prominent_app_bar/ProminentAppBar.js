@@ -8,7 +8,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import FloatingActionButton from './FloatingActionButton';
-import { PRIMARY, GRAY_DARK } from './../colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,21 +16,18 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  icon: {
-    color: GRAY_DARK,
-  },
   toolbar: {
     minHeight: 128,
     alignItems: 'flex-start',
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(2),
-    backgroundColor: PRIMARY,
+    backgroundColor: "white",
   },
   title: {
     flexGrow: 1,
     alignSelf: 'flex-end',
     marginBottom: theme.spacing(3),
-    color: GRAY_DARK,
+    color: "grey",
   },
 }));
 
