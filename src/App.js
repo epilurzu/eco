@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 // Components
@@ -10,12 +10,13 @@ import GeoChart from "./map/Geochart";
 import europe_data from "./data/europe.geo.json";
 
 function App() {
-  const flag = true;
+  const [corridor, setCorridor] = useState(null);
+  console.log(corridor);
   return (
     <div className="App">
       <ProminentAppBar />
-      <GeoChart states = {europe_data} />
-      <Alert flag = {flag} />
+      <GeoChart states={europe_data} />
+      <Alert corridor={corridor} onUploadCorridor={setCorridor} />
     </div>
   );
 }
