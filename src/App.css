@@ -23,19 +23,33 @@ svg {
 }
 
 svg.map {
-  background-color: aquamarine;
+  background-color: #e0f7fa;
 }
 
 svg .state {
-  fill: teal;
+  fill: #60b4ac;
 }
 
 svg .area {
-  fill: yellow;
+  fill: #a1d3bf;
 }
 
-svg .state:hover, .area:hover {
-  stroke: rgb(0, 0, 0);
-  stroke-width: 1px;
+svg .patch {
+  fill: #198d8c;
+}
+
+svg .state,
+.area,
+.patch {
+  stroke: #333333;
+  stroke-width: 0.25px;
+  cursor: pointer;
+}
+
+svg .state:hover,
+.area:hover,
+.patch:hover {
+  stroke: #ffa500;
+  stroke-width: 2px;
   cursor: pointer;
 }
