@@ -1,40 +1,74 @@
 {
   "name": "eco",
   "version": "0.1.0",
-  "private": true,
+  "description": "Ecological Corridor Overview",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epilurzu/eco.git"
+  },
+  "homepage": "",
+  "author": {
+    "name": "Enrico Podda",
+    "email": "e.ipodda@gmail.com",
+    "url": "https://github.com/epilurzu"
+  },
+  "keywords": [
+    "app",
+    "electron",
+    "open",
+    "open-source",
+    "react",
+    "reactjs",
+    "source"
+  ],
+  "engines": {
+    "node": ">=9.0.0",
+    "npm": ">=5.0.0",
+    "yarn": ">=1.0.0"
+  },
+  "browserslist": [
+    "last 4 versions"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "prod": "cross-env NODE_ENV=production webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
+    "package": "npm run build",
+    "postpackage": "electron-packager ./ --out=./builds"
+  },
   "dependencies": {
-    "@material-ui/core": "^4.10.0",
+    "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "can-ndjson-stream": "^1.0.2",
     "d3": "^5.16.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
     "resize-observer-polyfill": "^1.5.1",
     "topojson-client": "^3.1.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "babili-webpack-plugin": "^0.1.2",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.5.3",
+    "electron": "^9.0.0",
+    "electron-devtools-installer": "^3.0.0",
+    "electron-packager": "^14.2.1",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.2.1",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-pxtorem": "^5.1.1",
+    "style-loader": "^1.2.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
   }
 }

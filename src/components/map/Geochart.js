@@ -18,7 +18,7 @@ function GeoChart({ europe, natura2000, corridor }) {
 
   const states = topojson.feature(europe, europe.objects.europe);
   const areas = topojson.feature(natura2000, natura2000.objects.IT);
-  const patches = topojson.feature(corridor, corridor.objects.Corr_Dec_1);
+  const patches = corridor !== null ? topojson.feature(corridor, corridor.objects.Corr_Dec_1) : null;
 
   // will be called initially and on every data change
   useEffect(() => {
@@ -30,7 +30,7 @@ function GeoChart({ europe, natura2000, corridor }) {
 
     // projects geo-coordinates on a 2D plane
     const projection = geoMercator()
-      .fitSize([width, height], patches)
+      .fitSize([width, height], patches || areas)
       .precision(100);
 
     // transforms json data into the d attribute of a path element
@@ -53,12 +53,14 @@ function GeoChart({ europe, natura2000, corridor }) {
       .attr("d", (feature) => pathGenerator(feature));
 
     // render patches
-    svg
-      .selectAll(".patch")
-      .data(patches.features)
-      .join("path")
-      .attr("class", "patch")
-      .attr("d", (feature) => pathGenerator(feature));
+    if (patches != null) {
+      svg
+        .selectAll(".patch")
+        .data(patches.features)
+        .join("path")
+        .attr("class", "patch")
+        .attr("d", (feature) => pathGenerator(feature));
+    }
   }, [states, areas, corridor, dimensions]);
 
   return (
