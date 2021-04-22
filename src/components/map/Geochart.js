@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { select, geoPath, geoMercator } from "d3";
+import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
 
@@ -22,19 +22,30 @@ function GeoChart({ europe, natura2000, corridor }) {
 
   // will be called initially and on every data change
   useEffect(() => {
-    const svg = select(svgRef.current);
-
     // use resized dimensions, but fall back to getBoundingClientRect, if no dimensions yet.
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
     // projects geo-coordinates on a 2D plane
-    const projection = geoMercator()
+    const projection = d3.geoMercator()
       .fitSize([width, height], patches || areas)
       .precision(100);
 
+    // remove all existing svg
+    d3.select(svgRef.current).selectAll("svg").remove();
+
+    // create svg
+    const svg = d3.select(svgRef.current)
+      .call(d3.zoom()
+        .scaleExtent([1 / 50, Infinity])
+        .on("zoom", function (event) {
+          svg.attr("transform", event.transform)
+        }))
+      .append("svg")
+      .append("g");
+
     // transforms json data into the d attribute of a path element
-    const pathGenerator = geoPath().projection(projection);
+    const pathGenerator = d3.geoPath().projection(projection);
 
     // render states
     svg
