@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+html{
+  font-size: 1.3vw;
+}
+
 div.App {
   display: flex;
   flex-direction: column;
