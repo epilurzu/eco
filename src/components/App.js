@@ -14,6 +14,7 @@ import "../assets/css/App.css";
 // Components
 import Alert from "./alert/Alert";
 import GeoChart from "./map/Geochart";
+import EnhancedTable from "./table/EnhancedTable";
 
 // Data
 import europe_data from "./data/europe.json";
@@ -109,7 +110,7 @@ function App() {
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        Item Two
+        <EnhancedTable corridor={corridor} />
       </TabPanel>
 
       <Alert corridor={corridor} onUploadCorridor={setCorridor} />

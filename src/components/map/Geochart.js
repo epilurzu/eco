@@ -18,7 +18,8 @@ function GeoChart({ europe, natura2000, corridor }) {
 
   const states = topojson.feature(europe, europe.objects.europe);
   const areas = topojson.feature(natura2000, natura2000.objects.IT);
-  const patches = corridor !== null ? topojson.feature(corridor, corridor.objects.Corr_Dec_1) : null;
+  const corridorName = Object.keys(corridor.objects)[0];
+  const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[corridorName]) : null;
 
   // will be called initially and on every data change
   useEffect(() => {
