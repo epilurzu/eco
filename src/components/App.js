@@ -79,6 +79,8 @@ function App() {
   //const [corridor, setCorridor] = useState(null);
   const [corridor, setCorridor] = useState(corridor_data);
 
+  const [selectedId, setSelectedId] = useState([]);
+
   //necessary to change tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -106,11 +108,11 @@ function App() {
       </AppBar>
 
       <TabPanel value={value} index={0}>
-        <GeoChart europe={europe} natura2000={natura2000} corridor={corridor} />
+        <GeoChart europe={europe} natura2000={natura2000} corridor={corridor} selectedId={selectedId} setSelectedId={setSelectedId} />
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <EnhancedTable corridor={corridor} />
+        <EnhancedTable corridor={corridor} selectedId={selectedId} setSelectedId={setSelectedId} />
       </TabPanel>
 
       <Alert corridor={corridor} onUploadCorridor={setCorridor} />

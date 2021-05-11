@@ -41,6 +41,9 @@ svg .area {
 svg .patch {
   fill: #198d8c;
 }
+svg .selected {
+  fill: #ffa500 !important;
+}
 
 svg .state,
 .area,

@@ -234,17 +234,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function EnhancedTable({ corridor }) {
-
+function EnhancedTable({ corridor, selectedId, setSelectedId }) {
     fillHeadCells(corridor);
     fillRows(corridor);
 
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
-    const [selected, setSelected] = React.useState([]);
+    const [selected, setSelected] = React.useState(selectedId);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(50);
+
+    function updateSelectedId(selectedIdValue) {
+        setSelected(selectedIdValue);
+        setSelectedId(selectedIdValue);
+    };
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -255,10 +259,10 @@ function EnhancedTable({ corridor }) {
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n.name);
-            setSelected(newSelecteds);
+            updateSelectedId(newSelecteds);
             return;
         }
-        setSelected([]);
+        updateSelectedId([]);
     };
 
     const handleClick = (event, name) => {
@@ -278,7 +282,7 @@ function EnhancedTable({ corridor }) {
             );
         }
 
-        setSelected(newSelected);
+        updateSelectedId(newSelected);
     };
 
     const handleChangePage = (event, newPage) => {

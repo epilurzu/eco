@@ -10,7 +10,7 @@ import useResizeObserver from "./useResizeObserver";
  *    corridor given as input.
  */
 
-function GeoChart({ europe, natura2000, corridor }) {
+function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -20,6 +20,13 @@ function GeoChart({ europe, natura2000, corridor }) {
   const areas = topojson.feature(natura2000, natura2000.objects.IT);
   const corridorName = Object.keys(corridor.objects)[0];
   const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[corridorName]) : null;
+
+  function isIdSelected(feature, selectedId) {
+    if (selectedId.includes(feature.properties.OBJECTID)) {
+      return "patch selected";
+    }
+    return "patch";
+  }
 
   // will be called initially and on every data change
   useEffect(() => {
@@ -56,24 +63,40 @@ function GeoChart({ europe, natura2000, corridor }) {
       .attr("class", "state")
       .attr("d", (feature) => pathGenerator(feature));
 
-    // render areas
-    svg
-      .selectAll(".area")
-      .data(areas.features)
-      .join("path")
-      .attr("class", "area")
-      .attr("d", (feature) => pathGenerator(feature));
-
+    //// render areas
+    //svg
+    //  .selectAll(".area")
+    //  .data(areas.features)
+    //  .join("path")
+    //  .attr("class", "area")
+    //  .attr("d", (feature) => pathGenerator(feature));
+    //
     // render patches
     if (patches != null) {
       svg
         .selectAll(".patch")
         .data(patches.features)
         .join("path")
-        .attr("class", "patch")
-        .attr("d", (feature) => pathGenerator(feature));
+        .attr("data-id", (feature) => feature.properties.OBJECTID)
+        .attr("class", (feature) => isIdSelected(feature, selectedId))
+        .attr("d", (feature) => pathGenerator(feature))
+        .on("click", function (event) {
+          let id = parseInt(event.target.dataset.id);
+
+          if (!selectedId.includes(id)) {
+            selectedId.push(id);
+            setSelectedId(selectedId);
+            event.target.classList.add("selected");
+          }
+          else {
+            let index = selectedId.indexOf(id);
+            selectedId.splice(index, 1)
+            setSelectedId(selectedId);
+            event.target.classList.remove("selected");
+          }
+        });
     }
-  }, [states, areas, corridor, dimensions]);
+  }, [states, areas, corridor, dimensions, selectedId, isIdSelected, setSelectedId]);
 
   return (
     <div className={"map-container"} ref={wrapperRef}>
