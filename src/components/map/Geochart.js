@@ -20,6 +20,10 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
   const areas = topojson.feature(natura2000, natura2000.objects.IT);
   const corridorName = Object.keys(corridor.objects)[0];
   const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[corridorName]) : null;
+  var selectedPatches = {
+    "type": "FeatureCollection",
+    "features": patches.features.filter((feature) => selectedId.includes(feature.properties.OBJECTID))
+  };
 
   function isIdSelected(feature, selectedId) {
     if (selectedId.includes(feature.properties.OBJECTID)) {
@@ -36,7 +40,7 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
 
     // projects geo-coordinates on a 2D plane
     const projection = d3.geoMercator()
-      .fitSize([width, height], patches || areas)
+      .fitSize([width, height], selectedPatches || patches || areas)
       .precision(100);
 
     // remove all existing svg
@@ -45,7 +49,7 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
     // create svg
     const svg = d3.select(svgRef.current)
       .call(d3.zoom()
-        .scaleExtent([1 / 50, Infinity])
+        //.scaleExtent([1 / 50, Infinity])
         .on("zoom", function (event) {
           svg.attr("transform", event.transform)
         }))
