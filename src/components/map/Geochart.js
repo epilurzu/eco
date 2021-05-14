@@ -20,10 +20,13 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
   const areas = topojson.feature(natura2000, natura2000.objects.IT);
   const corridorName = Object.keys(corridor.objects)[0];
   const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[corridorName]) : null;
-  var selectedPatches = {
-    "type": "FeatureCollection",
-    "features": patches.features.filter((feature) => selectedId.includes(feature.properties.OBJECTID))
-  };
+  var selectedPatches = null;
+  if (selectedId.length != 0) {
+    selectedPatches = {
+      "type": "FeatureCollection",
+      "features": patches.features.filter((feature) => selectedId.includes(feature.properties.OBJECTID))
+    };
+  }
 
   function isIdSelected(feature, selectedId) {
     if (selectedId.includes(feature.properties.OBJECTID)) {
@@ -67,15 +70,15 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
       .attr("class", "state")
       .attr("d", (feature) => pathGenerator(feature));
 
-    //// render areas
-    //svg
-    //  .selectAll(".area")
-    //  .data(areas.features)
-    //  .join("path")
-    //  .attr("class", "area")
-    //  .attr("d", (feature) => pathGenerator(feature));
-    //
-    // render patches
+    // render areas
+    svg
+      .selectAll(".area")
+      .data(areas.features)
+      .join("path")
+      .attr("class", "area")
+      .attr("d", (feature) => pathGenerator(feature));
+
+    //render patches
     if (patches != null) {
       svg
         .selectAll(".patch")
