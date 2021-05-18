@@ -198,6 +198,10 @@ class EnhancedTable extends React.Component {
                 orderBy: property
             });
         };
+
+        this.handleChangePage = (event, newPage) => {
+            this.setState({ page: newPage });
+        };
     }
 
     fillHeadCells(corridor) {
@@ -242,10 +246,6 @@ class EnhancedTable extends React.Component {
 
         return rows;
     }
-
-    handleChangePage(event, newPage) {
-        this.setState({ page: newPage });
-    };
 
 
     handleChangeRowsPerPage(event) {
