@@ -7,6 +7,25 @@ html{
   font-size: 20px;
 }
 
+.app-root {
+  flex-grow: 1;
+}
+
+.appbar {
+  background-color: white !important ;
+}
+
+.text {
+  flexGrow: 1;
+  color: grey;
+}
+
+.highlight {
+  flexGrow: 1;
+  color: red;
+  backgroundColor: white;
+}
+
 div.App {
   display: flex;
   flex-direction: column;

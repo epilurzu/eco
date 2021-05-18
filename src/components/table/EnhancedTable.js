@@ -26,29 +26,14 @@ class EnhancedTableToolbar extends React.Component {
     render() {
         return (
             <Toolbar>
-                {this.props.numSelected > 0 ? (
-                    <Typography color="inherit" variant="subtitle1" component="div">
-                        {this.props.numSelected} selected
+                <Typography variant="h6" id="tableTitle" component="div">
+                    Table
                     </Typography>
-                ) : (
-                    <Typography variant="h6" id="tableTitle" component="div">
-                        Table
-                    </Typography>
-                )}
-
-                {this.props.numSelected > 0 ? (
-                    <Tooltip title="Delete">
-                        <IconButton aria-label="delete">
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                ) : (
-                    <Tooltip title="Filter list">
-                        <IconButton aria-label="filter list">
-                            <FilterListIcon />
-                        </IconButton>
-                    </Tooltip>
-                )}
+                <Tooltip title="Filter list">
+                    <IconButton aria-label="filter list">
+                        <FilterListIcon />
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
         );
     }
@@ -62,10 +47,10 @@ class EnhancedTableHead extends React.Component {
         this.onSelectAllClick = (event) => {
             if (event.target.checked) {
                 const newSelecteds = this.props.rows.map((n) => n.OBJECTID);
-                this.props.updateSetState({ selectedId: newSelecteds });
+                this.props.updateTableSetState({ selectedId: newSelecteds });
             }
             else {
-                this.props.updateSetState({ selectedId: [] });
+                this.props.updateTableSetState({ selectedId: [] });
             }
         };
     }
@@ -131,7 +116,7 @@ class EnhancedRow extends React.Component {
         return oldIsItemSelected != this.state.isItemSelected;
     }
 
-    handleClick(event, name, selectedId, updateSetState) {
+    handleClick(event, name, selectedId, updateTableSetState) {
         if (selectedId.includes(name)) {
             selectedId.splice(selectedId.indexOf(name), 1);
         }
@@ -140,16 +125,17 @@ class EnhancedRow extends React.Component {
         }
 
         this.setState({ isItemSelected: !this.state.isItemSelected });
-        updateSetState({ selectedId: selectedId });
+        console.log(selectedId);
+        //updateTableSetState({ selectedId: selectedId });
     };
 
     render() {
-        const { row, selectedId, updateSetState } = this.props
+        const { row, selectedId, updateTableSetState } = this.props
 
         return (
             <TableRow
                 hover
-                onClick={(event) => this.handleClick(event, row.OBJECTID, selectedId, updateSetState)}
+                onClick={(event) => this.handleClick(event, row.OBJECTID, selectedId, updateTableSetState)}
                 role="checkbox"
                 aria-checked={this.state.isItemSelected}
                 tabIndex={-1}
@@ -187,8 +173,15 @@ class EnhancedTable extends React.Component {
             orderby: 'ID'
         };
 
-        this.updateSetState = (state) => {
+        this.updateTableSetState = (state) => {
+
+            console.log("primo " + this.state.selectedId);
+
             this.setState(state);
+
+            console.log("secondo " + this.state.selectedId);
+
+            this.props.updateAppSetState({ selectedId: this.state.selectedId });
         }
 
         this.handleRequestSort = (event, property) => {
@@ -281,15 +274,11 @@ class EnhancedTable extends React.Component {
             : (a, b) => -this.descendingComparator(a, b, orderBy);
     }
 
-    componentWillUnmount() {
-        this.props.setSelectedId(this.state.selectedId);
-    }
-
     render() {
         const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.rows.length - this.state.page * this.state.rowsPerPage);
 
         return (
-            <div className={"root"}>
+            <div className={"table-root"}>
                 <Paper className={"paper"}>
                     <TablePagination
                         rowsPerPageOptions={[50]}
@@ -300,7 +289,6 @@ class EnhancedTable extends React.Component {
                         onChangePage={this.handleChangePage}
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
-                    <EnhancedTableToolbar numSelected={this.state.selectedId.length} />
                     <TableContainer className={"container"}>
                         <Table
                             stickyHeader
@@ -316,7 +304,7 @@ class EnhancedTable extends React.Component {
                                 numSelected={this.state.selectedId.length}
                                 order={this.state.order}
                                 orderBy={this.state.pageorderBy}
-                                updateSetState={this.updateSetState}
+                                updateTableSetState={this.updateTableSetState}
                                 onRequestSort={this.handleRequestSort}
                                 rowCount={this.rows.length}
                             />
@@ -330,7 +318,7 @@ class EnhancedTable extends React.Component {
                                                 row={row}
                                                 index={index}
                                                 selectedId={this.state.selectedId}
-                                                updateSetState={this.updateSetState}
+                                                updateTableSetState={this.updateTableSetState}
                                             />
                                         );
                                     })}
