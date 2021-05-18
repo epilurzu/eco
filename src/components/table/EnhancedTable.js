@@ -55,8 +55,23 @@ class EnhancedTableToolbar extends React.Component {
 };
 
 class EnhancedTableHead extends React.Component {
+    constructor(props) {
+        super(props);
+
+        //arrow function necessary for context
+        this.onSelectAllClick = (event) => {
+            if (event.target.checked) {
+                const newSelecteds = this.props.rows.map((n) => n.OBJECTID);
+                this.props.updateSetState({ selectedId: newSelecteds });
+            }
+            else {
+                this.props.updateSetState({ selectedId: [] });
+            }
+        };
+    }
+
     render() {
-        const { headCells, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = this.props;
+        const { headCells, order, orderBy, numSelected, rowCount, onRequestSort } = this.props;
         const createSortHandler = (property) => (event) => {
             onRequestSort(event, property);
         };
@@ -68,7 +83,7 @@ class EnhancedTableHead extends React.Component {
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={rowCount > 0 && numSelected === rowCount}
-                            onChange={onSelectAllClick}
+                            onChange={this.onSelectAllClick}
                             inputProps={{ 'aria-label': 'select all rows' }}
                         />
                     </TableCell>
@@ -109,9 +124,11 @@ class EnhancedRow extends React.Component {
         this.state = { isItemSelected: props.selectedId.includes(props.row.OBJECTID) };
     }
 
-    shouldComponentUpdate(nextProp, nextState) {
-        console.log(this.props.selectedId)
-        return this.state.isItemSelected != nextState.isItemSelected;
+    shouldComponentUpdate(nextProps, nextState) {
+        const oldIsItemSelected = this.state.isItemSelected;
+        this.state.isItemSelected = nextProps.selectedId.includes(nextProps.index + 1);
+
+        return oldIsItemSelected != this.state.isItemSelected;
     }
 
     handleClick(event, name, selectedId, updateSetState) {
@@ -181,9 +198,6 @@ class EnhancedTable extends React.Component {
                 orderBy: property
             });
         };
-
-        console.log(props.corridor);
-        console.log(this.state.selectedId);
     }
 
     fillHeadCells(corridor) {
@@ -241,16 +255,6 @@ class EnhancedTable extends React.Component {
         });
     };
 
-    handleSelectAllClick(event) {
-        if (event.target.checked) {
-            const newSelecteds = this.rows.map((n) => n.name);
-            this.setState({ selectedId: newSelecteds });
-        }
-        else {
-            this.setState({ selectedId: [] });
-        }
-    };
-
     stableSort(array, comparator) {
         const stabilizedThis = array.map((el, index) => [el, index]);
         stabilizedThis.sort((a, b) => {
@@ -275,6 +279,10 @@ class EnhancedTable extends React.Component {
         return order === 'desc'
             ? (a, b) => this.descendingComparator(a, b, orderBy)
             : (a, b) => -this.descendingComparator(a, b, orderBy);
+    }
+
+    componentWillUnmount() {
+        this.props.setSelectedId(this.state.selectedId);
     }
 
     render() {
@@ -304,10 +312,11 @@ class EnhancedTable extends React.Component {
                             <EnhancedTableHead
                                 //classes={classes}
                                 headCells={this.headCells}
+                                rows={this.rows}
                                 numSelected={this.state.selectedId.length}
                                 order={this.state.order}
                                 orderBy={this.state.pageorderBy}
-                                onSelectAllClick={this.handleSelectAllClick}
+                                updateSetState={this.updateSetState}
                                 onRequestSort={this.handleRequestSort}
                                 rowCount={this.rows.length}
                             />
