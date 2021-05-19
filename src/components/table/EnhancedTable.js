@@ -1,7 +1,4 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,9 +13,6 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 
@@ -289,7 +283,7 @@ class EnhancedTable extends React.Component {
                         onChangePage={this.handleChangePage}
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
-                    <TableContainer className={"container"}>
+                    <TableContainer className={"tableContainer"}>
                         <Table
                             stickyHeader
                             className={"table"}
@@ -298,7 +292,7 @@ class EnhancedTable extends React.Component {
                             aria-label="enhanced table"
                         >
                             <EnhancedTableHead
-                                //classes={classes}
+                                className={"tableHead"}
                                 headCells={this.headCells}
                                 rows={this.rows}
                                 numSelected={this.state.selectedId.length}
@@ -308,7 +302,8 @@ class EnhancedTable extends React.Component {
                                 onRequestSort={this.handleRequestSort}
                                 rowCount={this.rows.length}
                             />
-                            <TableBody>
+                            <TableBody
+                                className={"tableBody"}>
                                 {this.stableSort(this.rows, this.getComparator(this.state.order, this.state.orderBy))
                                     .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                     .map((row, index) => {

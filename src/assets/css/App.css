@@ -3,16 +3,34 @@
   height: 100%;
 }
 
-html{
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
   font-size: 20px;
+}
+
+div.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.Appbar {
+  height: 90px;
+  background-color: white !important ;
+}
+
+.MainContainer {
+  height: 100%;  
 }
 
 .app-root {
   flex-grow: 1;
-}
-
-.appbar {
-  background-color: white !important ;
 }
 
 .text {
@@ -24,15 +42,6 @@ html{
   flexGrow: 1;
   color: red;
   backgroundColor: white;
-}
-
-div.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  height: 100vh;
-  box-sizing: border-box;
 }
 
 div .map-container {
@@ -84,23 +93,23 @@ svg .state:hover,
 
 
 .table-root {
-        width: auto;
-        padding: 3rem;
-    }
+  height: 100%;
+  width: 100%;
+}
 
 .paper {
-        /*height: '85vh';*/
-        /*width: '100%';*/
-    }
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
 
-.container {
-        height: 77.5vh;
-    }
+.tableContainer {
+  height: 100%;
+}
     
 .table {
-        /*height: 100%;*/
-        /*min-width: 750;*/
-    }
+  height: 100%;
+}
     
 .visuallyHidden {
     border: 0;

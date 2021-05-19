@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import "../assets/css/App.css";
 
 // Components
@@ -17,19 +13,9 @@ import GeoChart from "./map/Geochart";
 import EnhancedTable from "./table/EnhancedTable";
 
 // Data
-import europe_data from "./data/europe.json";
-import natura2000_data from "./data/areas/IT.json";
-import corridor_data from "./data/corridor_accurate.json";
-
-/*
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-*/
-
-
+import europe_data from "./data/europe.topo.json";
+import natura2000_data from "./data/areas/IT.topo.json";
+import corridor_data from "./data/corridor_original.topo.json";
 
 class CustomToolbar extends React.Component {
   render() {
@@ -48,28 +34,17 @@ class CustomToolbar extends React.Component {
   }
 }
 
-class TabPanel extends React.Component {
-  render() {
-    const { children, value, index, ...other } = this.props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        style={{ height: "100%" }}
-        {...other}
-      >
-        {value === index && (
-          <Box p={0} style={{ height: "100%" }}>
-            <Typography component={'div'} style={{ height: "100%" }}>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
+function TabContainer(props) {
+  return (
+    <Typography component="div" className="MainContainer">
+      {props.children}
+    </Typography>
+  );
 }
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 class App extends React.Component {
 
@@ -86,44 +61,33 @@ class App extends React.Component {
     };
 
     this.updateAppSetState = (state) => {
-      //console.log(this.state.selectedId);
-      //console.log(state);
       this.setState(state);
-      //console.log(this.state.selectedId);
     }
 
-    this.handleTabChange = (event, newValue) => {
-      this.setState = ({
-        tabValue: newValue
-      });
-    }
-
-    this.goToTab = (index) => {
-      return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-      };
-    }
+    this.handleTabChange = (event, tabValue) => {
+      this.setState({ tabValue });
+    };
   }
 
   render() {
     return (
       <div className="App">
-        <AppBar position="static" className="appbar">
+        <AppBar position="sticky" className="Appbar">
           <CustomToolbar num_selected={this.state.selectedId.length} />
           <Tabs value={this.state.tabValue} indicatorColor="primary" textColor="primary" onChange={this.handleTabChange} aria-label="simple tabs example" centered>
-            <Tab label="Map" {...this.goToTab(0)} />
-            <Tab label="Table" {...this.goToTab(1)} />
+            <Tab label="Map" />
+            <Tab label="Table" />
           </Tabs>
         </AppBar>
 
-        <TabPanel value={this.state.tabValue} index={0}>
-          <EnhancedTable corridor={this.corridor} selectedId={this.state.selectedId} updateAppSetState={this.updateAppSetState} />
-        </TabPanel>
+        {this.state.tabValue === 0 && <TabContainer>
+          <GeoChart europe={this.europe} natura2000={this.natura2000} corridor={this.corridor} selectedId={this.state.selectedId} updateAppSetState={this.updateAppSetState} />
+        </TabContainer>}
 
-        <TabPanel value={this.state.tabValue} index={1}>
+        {this.state.tabValue === 1 && <TabContainer>
           <EnhancedTable corridor={this.corridor} selectedId={this.state.selectedId} updateAppSetState={this.updateAppSetState} />
-        </TabPanel>
+        </TabContainer>}
+
       </div>
     );
   }

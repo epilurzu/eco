@@ -16,10 +16,9 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
   const dimensions = useResizeObserver(wrapperRef);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const states = topojson.feature(europe, europe.objects.europe);
-  const areas = topojson.feature(natura2000, natura2000.objects.IT);
-  const corridorName = Object.keys(corridor.objects)[0];
-  const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[corridorName]) : null;
+  const states = topojson.feature(europe, europe.objects[Object.keys(europe.objects)[0]]);
+  const areas = topojson.feature(natura2000, natura2000.objects[Object.keys(natura2000.objects)[0]]);
+  const patches = corridor !== null ? topojson.feature(corridor, corridor.objects[Object.keys(corridor.objects)[0]]) : null;
   var selectedPatches = null;
   if (selectedId.length != 0) {
     selectedPatches = {
