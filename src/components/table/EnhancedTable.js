@@ -15,7 +15,43 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { Container } from '@material-ui/core';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
+class Options extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = ({
+            checked: false
+        });
+
+
+        this.handleChange = () => {
+            this.setState({ checked: !this.state.checked });
+            this.props.filterRowShowed(!this.state.checked);
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <FormControlLabel
+                    label="Only selected"
+                    control={
+                        <Switch
+                            checked={this.state.checked}
+                            onChange={this.handleChange}
+                            name="checked"
+                            color="primary"
+                        />
+                    }
+                />
+            </div>
+        );
+    }
+}
 
 class EnhancedTableToolbar extends React.Component {
     render() {
@@ -102,27 +138,25 @@ class EnhancedRow extends React.Component {
         super(props);
 
         this.labelId = "enhanced-table-checkbox-" + props.index;
-        this.state = { isItemSelected: props.selectedId.includes(props.row.OBJECTID) };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const oldIsItemSelected = this.state.isItemSelected;
-        this.state.isItemSelected = nextProps.selectedId.includes(nextProps.index + 1);
+        let OBJECTID = this.props.row.OBJECTID;
 
-        return oldIsItemSelected != this.state.isItemSelected;
+        return this.props.selectedId.includes(OBJECTID) != nextProps.selectedId.includes(OBJECTID);
     }
 
-    handleClick(event, name, updateTableSetState) {
+    handleClick(event, OBJECTID, updateTableSetState) {
 
         let tempSelectedId = this.props.selectedId.slice();
-        if (this.props.selectedId.includes(name)) {
-            tempSelectedId.splice(this.props.selectedId.indexOf(name), 1);
+        if (this.props.selectedId.includes(OBJECTID)) {
+            tempSelectedId.splice(this.props.selectedId.indexOf(OBJECTID), 1);
         }
         else {
-            tempSelectedId.push(name);
+            tempSelectedId.push(OBJECTID);
         }
 
-        this.setState({ isItemSelected: !this.state.isItemSelected });
+        this.setState({ isItemSelected: tempSelectedId.includes(OBJECTID) });
         updateTableSetState({ selectedId: tempSelectedId });
     };
 
@@ -134,13 +168,13 @@ class EnhancedRow extends React.Component {
                 hover
                 onClick={(event) => this.handleClick(event, row.OBJECTID, updateTableSetState)}
                 role="checkbox"
-                aria-checked={this.state.isItemSelected}
+                aria-checked={selectedId.includes(row.OBJECTID)}
                 tabIndex={-1}
-                selected={this.state.isItemSelected}
+                selected={selectedId.includes(row.OBJECTID)}
             >
                 <TableCell padding="checkbox">
                     <Checkbox
-                        checked={this.state.isItemSelected}
+                        checked={selectedId.includes(row.OBJECTID)}
                         inputProps={{ 'aria-labelledby': this.labelId }}
                     />
                 </TableCell>
@@ -164,6 +198,7 @@ class EnhancedTable extends React.Component {
 
         this.state = {
             selectedId: props.selectedId,
+            rowShowed: this.rows,
             page: 0,
             rowsPerPage: 50,
             order: 'asc',
@@ -179,6 +214,10 @@ class EnhancedTable extends React.Component {
             this.setState(state);
 
             this.props.updateAppSetState({ selectedId: state.selectedId });
+
+            if (this.rows.length != this.state.rowShowed.length) {
+                this.setState({ rowShowed: this.rows.filter((row) => state.selectedId.includes(row.OBJECTID)) });
+            }
         }
 
         this.handleRequestSort = (event, property) => {
@@ -191,6 +230,15 @@ class EnhancedTable extends React.Component {
 
         this.handleChangePage = (event, newPage) => {
             this.setState({ page: newPage });
+        };
+
+        this.filterRowShowed = (onlySelected) => {
+            if (onlySelected) {
+                this.setState({ rowShowed: this.rows.filter((row) => this.state.selectedId.includes(row.OBJECTID)) });
+            }
+            else {
+                this.setState({ rowShowed: this.rows });
+            }
         };
     }
 
@@ -246,7 +294,6 @@ class EnhancedTable extends React.Component {
         return rows;
     }
 
-
     handleChangeRowsPerPage(event) {
         this.setState({
             rowsPerPage: parseInt(event.target.value, 10),
@@ -281,7 +328,7 @@ class EnhancedTable extends React.Component {
     }
 
     render() {
-        const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.rows.length - this.state.page * this.state.rowsPerPage);
+        const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.state.rowShowed.length - this.state.page * this.state.rowsPerPage);
 
         return (
             <div className={"paper"}
@@ -292,13 +339,14 @@ class EnhancedTable extends React.Component {
                         className={"tablePagination"}
                         rowsPerPageOptions={[50]}
                         component="div"
-                        count={this.rows.length}
+                        count={this.state.rowShowed.length}
                         rowsPerPage={this.state.rowsPerPage}
                         page={this.state.page}
                         onChangePage={this.handleChangePage}
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
                     <TableContainer className={"tableContainer"}>
+                        <Options filterRowShowed={this.filterRowShowed} />
                         <Table
                             //style={this.state.paper}
                             stickyHeader
@@ -309,17 +357,17 @@ class EnhancedTable extends React.Component {
                         >
                             <EnhancedTableHead
                                 headCells={this.headCells}
-                                rows={this.rows}
+                                rows={this.state.rowShowed}
                                 numSelected={this.state.selectedId.length}
                                 order={this.state.order}
                                 orderBy={this.state.pageorderBy}
                                 updateTableSetState={this.updateTableSetState}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={this.rows.length}
+                                rowCount={this.state.rowShowed.length}
                             />
                             <TableBody
                                 className={"tableBody"}>
-                                {this.stableSort(this.rows, this.getComparator(this.state.order, this.state.orderBy))
+                                {this.stableSort(this.state.rowShowed, this.getComparator(this.state.order, this.state.orderBy))
                                     .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                     .map((row, index) => {
                                         return (
@@ -333,7 +381,7 @@ class EnhancedTable extends React.Component {
                                         );
                                     })}
                                 {emptyRows > 0 && (
-                                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                                    <TableRow style={{ height: 33 * emptyRows }}>
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}

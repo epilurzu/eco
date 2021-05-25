@@ -15,11 +15,13 @@ import EnhancedTable from "./table/EnhancedTable";
 // Data
 import europe_data from "./data/europe.topo.json";
 import natura2000_data from "./data/areas/IT.topo.json";
-import corridor_data from "./data/corridor_original.topo.json";
+import corridor_data from "./data/corridor_accurate.json";
 
 class CustomToolbar extends React.Component {
   render() {
+    console.log("Selected:");
     console.log(this.props.selectedId);
+    console.log("-------------------------");
     return (
       <Toolbar>
         { this.props.selectedId.length > 0 ? (
