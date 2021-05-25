@@ -72,8 +72,9 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <AppBar position="sticky" className="Appbar">
+        <AppBar position="fixed" className="Appbar">
           <CustomToolbar num_selected={this.state.selectedId.length} />
+          <div />
           <Tabs value={this.state.tabValue} indicatorColor="primary" textColor="primary" onChange={this.handleTabChange} aria-label="simple tabs example" centered>
             <Tab label="Map" />
             <Tab label="Table" />

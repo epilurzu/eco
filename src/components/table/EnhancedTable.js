@@ -14,6 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { Container } from '@material-ui/core';
 
 
 class EnhancedTableToolbar extends React.Component {
@@ -56,7 +57,8 @@ class EnhancedTableHead extends React.Component {
         };
 
         return (
-            <TableHead>
+            <TableHead
+                className={"tableHead"}>
                 <TableRow>
                     <TableCell padding="checkbox">
                         <Checkbox
@@ -164,7 +166,11 @@ class EnhancedTable extends React.Component {
             page: 0,
             rowsPerPage: 50,
             order: 'asc',
-            orderby: 'ID'
+            orderby: 'ID',
+            paper: {
+                height: 10,
+                width: 10
+            }
         };
 
         this.updateTableSetState = (state) => {
@@ -189,6 +195,20 @@ class EnhancedTable extends React.Component {
         this.handleChangePage = (event, newPage) => {
             this.setState({ page: newPage });
         };
+    }
+
+    componentDidMount() {
+        this.setState({
+            paper: {
+                height: window.innerHeight - document.getElementsByClassName('Appbar')[0].scrollHeight,
+                width: document.getElementsByClassName('MainContainer').width
+            }
+        })
+
+        console.log(document.getElementsByClassName('Appbar')[0].scrollHeight)
+        console.log(window.innerHeight - 111)
+        console.log(window.innerHeight - document.getElementsByClassName('Appbar')[0].scrollHeight)
+
     }
 
     fillHeadCells(corridor) {
@@ -272,9 +292,12 @@ class EnhancedTable extends React.Component {
         const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.rows.length - this.state.page * this.state.rowsPerPage);
 
         return (
-            <div className={"table-root"}>
-                <Paper className={"paper"}>
+            <div className={"paper"}
+                style={this.state.paper}
+            >
+                <div className={"tableScroll"}>
                     <TablePagination
+                        className={"tablePagination"}
                         rowsPerPageOptions={[50]}
                         component="div"
                         count={this.rows.length}
@@ -285,6 +308,7 @@ class EnhancedTable extends React.Component {
                     />
                     <TableContainer className={"tableContainer"}>
                         <Table
+                            //style={this.state.paper}
                             stickyHeader
                             className={"table"}
                             aria-labelledby="tableTitle"
@@ -292,7 +316,6 @@ class EnhancedTable extends React.Component {
                             aria-label="enhanced table"
                         >
                             <EnhancedTableHead
-                                className={"tableHead"}
                                 headCells={this.headCells}
                                 rows={this.rows}
                                 numSelected={this.state.selectedId.length}
@@ -325,7 +348,7 @@ class EnhancedTable extends React.Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </Paper>
+                </div>
             </div>
         );
     }
