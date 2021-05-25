@@ -10,7 +10,7 @@ import useResizeObserver from "./useResizeObserver";
  *    corridor given as input.
  */
 
-function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
+function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -89,20 +89,21 @@ function GeoChart({ europe, natura2000, corridor, selectedId, setSelectedId }) {
         .on("click", function (event) {
           let id = parseInt(event.target.dataset.id);
 
+          let tempSelectedId = selectedId.slice();
           if (!selectedId.includes(id)) {
-            selectedId.push(id);
-            setSelectedId(selectedId);
+            tempSelectedId.push(id);
+            updateAppSetState({ selectedId: tempSelectedId });
             event.target.classList.add("selected");
           }
           else {
             let index = selectedId.indexOf(id);
-            selectedId.splice(index, 1)
-            setSelectedId(selectedId);
+            tempSelectedId.splice(index, 1);
+            updateAppSetState({ selectedId: tempSelectedId });
             event.target.classList.remove("selected");
           }
         });
     }
-  }, [states, areas, corridor, dimensions, selectedId, isIdSelected, setSelectedId]);
+  }, [states, areas, corridor, dimensions, selectedId, isIdSelected, updateAppSetState]);
 
   return (
     <div className={"map-container"} ref={wrapperRef}>

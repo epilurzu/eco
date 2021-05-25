@@ -112,17 +112,18 @@ class EnhancedRow extends React.Component {
         return oldIsItemSelected != this.state.isItemSelected;
     }
 
-    handleClick(event, name, selectedId, updateTableSetState) {
-        if (selectedId.includes(name)) {
-            selectedId.splice(selectedId.indexOf(name), 1);
+    handleClick(event, name, updateTableSetState) {
+
+        let tempSelectedId = this.props.selectedId.slice();
+        if (this.props.selectedId.includes(name)) {
+            tempSelectedId.splice(this.props.selectedId.indexOf(name), 1);
         }
         else {
-            selectedId.push(name);
+            tempSelectedId.push(name);
         }
 
         this.setState({ isItemSelected: !this.state.isItemSelected });
-        console.log(selectedId);
-        //updateTableSetState({ selectedId: selectedId });
+        updateTableSetState({ selectedId: tempSelectedId });
     };
 
     render() {
@@ -131,7 +132,7 @@ class EnhancedRow extends React.Component {
         return (
             <TableRow
                 hover
-                onClick={(event) => this.handleClick(event, row.OBJECTID, selectedId, updateTableSetState)}
+                onClick={(event) => this.handleClick(event, row.OBJECTID, updateTableSetState)}
                 role="checkbox"
                 aria-checked={this.state.isItemSelected}
                 tabIndex={-1}
@@ -175,13 +176,9 @@ class EnhancedTable extends React.Component {
 
         this.updateTableSetState = (state) => {
 
-            console.log("primo " + this.state.selectedId);
-
             this.setState(state);
 
-            console.log("secondo " + this.state.selectedId);
-
-            this.props.updateAppSetState({ selectedId: this.state.selectedId });
+            this.props.updateAppSetState({ selectedId: state.selectedId });
         }
 
         this.handleRequestSort = (event, property) => {
@@ -204,11 +201,6 @@ class EnhancedTable extends React.Component {
                 width: document.getElementsByClassName('MainContainer').width
             }
         })
-
-        console.log(document.getElementsByClassName('Appbar')[0].scrollHeight)
-        console.log(window.innerHeight - 111)
-        console.log(window.innerHeight - document.getElementsByClassName('Appbar')[0].scrollHeight)
-
     }
 
     fillHeadCells(corridor) {

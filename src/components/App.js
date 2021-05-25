@@ -19,11 +19,12 @@ import corridor_data from "./data/corridor_original.topo.json";
 
 class CustomToolbar extends React.Component {
   render() {
+    console.log(this.props.selectedId);
     return (
       <Toolbar>
-        { this.props.num_selected > 0 ? (
+        { this.props.selectedId.length > 0 ? (
           <Typography variant="h5" className="highlight">
-            {this.props.num_selected} selected
+            {this.props.selectedId.length} selected
           </Typography>
         ) : (
           <Typography variant="h5" className="text">
@@ -73,7 +74,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <AppBar position="fixed" className="Appbar">
-          <CustomToolbar num_selected={this.state.selectedId.length} />
+          <CustomToolbar selectedId={this.state.selectedId} />
           <div />
           <Tabs value={this.state.tabValue} indicatorColor="primary" textColor="primary" onChange={this.handleTabChange} aria-label="simple tabs example" centered>
             <Tab label="Map" />
@@ -82,11 +83,11 @@ class App extends React.Component {
         </AppBar>
 
         {this.state.tabValue === 0 && <TabContainer>
-          <GeoChart europe={this.europe} natura2000={this.natura2000} corridor={this.corridor} selectedId={this.state.selectedId} updateAppSetState={this.updateAppSetState} />
+          <GeoChart europe={this.europe} natura2000={this.natura2000} corridor={this.corridor} selectedId={this.state.selectedId.slice()} updateAppSetState={this.updateAppSetState} />
         </TabContainer>}
 
         {this.state.tabValue === 1 && <TabContainer>
-          <EnhancedTable corridor={this.corridor} selectedId={this.state.selectedId} updateAppSetState={this.updateAppSetState} />
+          <EnhancedTable corridor={this.corridor} selectedId={this.state.selectedId.slice()} updateAppSetState={this.updateAppSetState} />
         </TabContainer>}
 
       </div>
