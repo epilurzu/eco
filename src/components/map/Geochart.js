@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
 import SimpleCard from "./SimpleCard";
+import SimpleMenu from "./SimpleMenu";
 
 /**
  * Component that renders a map with 3 layers:
@@ -10,6 +11,37 @@ import SimpleCard from "./SimpleCard";
  *    natura 2000 areas;
  *    corridor given as input.
  */
+
+function getBoundingBoxCenter(geometry) {
+  if (geometry != null) {
+    let min_x = 1000;
+    let min_y = 1000;
+    let max_x = 0;
+    let max_y = 0;
+
+    geometry.coordinates[0].forEach((point, index) => {
+      if (point[0] < min_x) {
+        min_x = point[0];
+      }
+      if (point[0] > max_x) {
+        max_x = point[0];
+      }
+      if (point[1] < min_y) {
+        min_y = point[1];
+      }
+      if (point[1] > max_y) {
+        max_y = point[1];
+      }
+      return;
+    });
+
+    let centerBoundingBox = [((max_x - min_x) / 2) + min_x, ((max_y - min_y) / 2) + min_y];
+
+    return centerBoundingBox;
+  }
+
+  return [0, 0];
+}
 
 function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState }) {
   const svgRef = useRef();
@@ -85,6 +117,7 @@ function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState 
         .data(patches.features)
         .join("path")
         .attr("data-id", (feature) => feature.properties.OBJECTID)
+        .attr("data-centroid", (feature) => getBoundingBoxCenter(feature.geometry))
         .attr("class", (feature) => isIdSelected(feature, selectedId))
         .attr("d", (feature) => pathGenerator(feature))
         .on("click", function (event) {
@@ -104,12 +137,25 @@ function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState 
           }
         });
     }
+
+    svg.selectAll(".patch")
+      .each(function (feature, i) {
+        svg.append('circle')
+          .attr("class", "circle")
+          .attr('cx', projection(getBoundingBoxCenter(feature.geometry))[0])
+          .attr('cy', projection(getBoundingBoxCenter(feature.geometry))[1])
+          .attr('r', 3)
+          .style('fill', 'red')
+      });
+
+
   }, [states, areas, corridor, dimensions, selectedId, isIdSelected, updateAppSetState]);
 
   return (
     <div className={"map-container"} ref={wrapperRef}>
-      <svg className={"map"} ref={svgRef}></svg>
+      <SimpleMenu />
       <SimpleCard patches={patches} selectedId={selectedId.slice()} updateAppSetState={updateAppSetState} />
+      <svg className={"map"} ref={svgRef}></svg>
     </div>
   );
 }

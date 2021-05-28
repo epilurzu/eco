@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 const styles = {
     card: {
         position: "fixed",
+        overflow: "scroll",
         height: "30vh",
         width: "30vW",
         margin: 10,
@@ -41,7 +42,7 @@ function SimpleCard(props) {
     const { classes, patches, selectedId, updateAppSetState } = props;
 
     if (selectedId.length === 0) {
-        return <Card />;
+        return <span />;
     }
 
     if (selectedId.length === 1) {
