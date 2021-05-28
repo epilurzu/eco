@@ -15,7 +15,7 @@ import EnhancedTable from "./table/EnhancedTable";
 // Data
 import europe_data from "./data/europe.topo.json";
 import natura2000_data from "./data/areas/IT.topo.json";
-import corridor_data from "./data/corridor_accurate.json";
+import corridor_data from "./data/corridor.topo.json";
 
 class CustomToolbar extends React.Component {
   render() {

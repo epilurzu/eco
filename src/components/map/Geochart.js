@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
+import SimpleCard from "./SimpleCard";
 
 /**
  * Component that renders a map with 3 layers:
@@ -108,6 +109,7 @@ function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState 
   return (
     <div className={"map-container"} ref={wrapperRef}>
       <svg className={"map"} ref={svgRef}></svg>
+      <SimpleCard patches={patches} selectedId={selectedId.slice()} updateAppSetState={updateAppSetState} />
     </div>
   );
 }
