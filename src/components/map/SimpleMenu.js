@@ -9,14 +9,20 @@ class SimpleMenu extends React.Component {
 
         this.state = {
             anchorEl: null,
+            networkIsShowed: false,
+            vcnDegreeIsShowed: false,
+            centralityIsShowed: false,
+            scoreIsShowed: false,
         };
 
         this.handleClick = event => {
             this.setState({ anchorEl: event.currentTarget });
         };
 
-        this.handleClose = () => {
-            this.setState({ anchorEl: null });
+        this.handleNeworkClick = () => {
+            let newValue = !this.state.networkIsShowed;
+            this.props.show("network", newValue);
+            this.setState({ networkIsShowed: newValue, anchorEl: null });
         };
 
     }
@@ -39,7 +45,10 @@ class SimpleMenu extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    <MenuItem onClick={this.handleClose}>Network</MenuItem>
+                    <MenuItem onClick={this.handleNeworkClick}>Network</MenuItem>
+                    <MenuItem onClick={this.handleNeworkClick}>Virtual Cut Nodes</MenuItem>
+                    <MenuItem onClick={this.handleNeworkClick}>Centrality</MenuItem>
+                    <MenuItem onClick={this.handleNeworkClick}>Score</MenuItem>
                 </Menu>
             </div>
         );

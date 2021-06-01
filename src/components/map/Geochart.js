@@ -4,6 +4,7 @@ import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
 import SimpleCard from "./SimpleCard";
 import SimpleMenu from "./SimpleMenu";
+import { LocalConvenienceStoreOutlined } from "@material-ui/icons";
 
 /**
  * Component that renders a map with 3 layers:
@@ -41,6 +42,12 @@ function getBoundingBoxCenter(geometry) {
   }
 
   return [0, 0];
+}
+
+function show(className, isShowed) {
+  [...document.getElementsByClassName(className)].forEach((element, index) => {
+    isShowed ? element.style.display = "block" : element.style.display = "none";
+  });
 }
 
 function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState }) {
@@ -141,19 +148,46 @@ function GeoChart({ europe, natura2000, corridor, selectedId, updateAppSetState 
     svg.selectAll(".patch")
       .each(function (feature, i) {
         svg.append('circle')
-          .attr("class", "circle")
+          .attr("class", "circle network")
           .attr('cx', projection(getBoundingBoxCenter(feature.geometry))[0])
           .attr('cy', projection(getBoundingBoxCenter(feature.geometry))[1])
-          .attr('r', 3)
-          .style('fill', 'red')
+        //.attr('r', 3)
+        //.style('fill', 'red')
       });
 
+    svg.selectAll(".patch")
+      .each(function (feature, i) {
+        feature.properties.NEIGHBORS.split(",").forEach((neighbor, index) => {
+          let n_patch = patches.features.find((feature) => feature.properties.OBJECTID == neighbor)
+          if (n_patch !== undefined && feature !== undefined) {
+            if (n_patch.geometry !== null && feature.geometry !== null) {
+
+              if (parseInt(projection(getBoundingBoxCenter(patches.features.find((feature) => feature.properties.OBJECTID == neighbor).geometry))[0]) < 0) {
+                console.log(patches.features.find((feature) => feature.properties.OBJECTID == neighbor));
+              }
+              let x1 = projection(getBoundingBoxCenter(feature.geometry))[0];
+              let y1 = projection(getBoundingBoxCenter(feature.geometry))[1];
+              let x2 = projection(getBoundingBoxCenter(n_patch.geometry))[0];
+              let y2 = projection(getBoundingBoxCenter(n_patch.geometry))[1];
+
+              svg.append("line")
+                .attr("class", "line network")
+                .attr("x1", x1)
+                .attr("y1", y1)
+                .attr("x2", x2)
+                .attr("y2", y2);
+              //.attr("stroke-width", 1)
+              //.attr("stroke", "black");
+            }
+          }
+        })
+      });
 
   }, [states, areas, corridor, dimensions, selectedId, isIdSelected, updateAppSetState]);
 
   return (
     <div className={"map-container"} ref={wrapperRef}>
-      <SimpleMenu />
+      <SimpleMenu show={show} />
       <SimpleCard patches={patches} selectedId={selectedId.slice()} updateAppSetState={updateAppSetState} />
       <svg className={"map"} ref={svgRef}></svg>
     </div>

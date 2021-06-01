@@ -102,6 +102,22 @@ svg .state:hover,
   cursor: pointer;
 }
 
+.circle{
+  /*stroke: #333333;*/
+  /*stroke-width: 0.5px;*/
+  /*vector-effect: non-scaling-stroke;*/
+  fill: #6A1B9A;
+  r: 0.5;
+}
+
+.line{
+  stroke: #6A1B9A;
+  stroke-width: 0.5px;
+  vector-effect: non-scaling-stroke;
+  /*fill: #6A1B9A;*/
+  /*r: 0.5;*/
+}
+
 .table-root {
   height: 100%;
   width: 100%;
