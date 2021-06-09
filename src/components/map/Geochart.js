@@ -88,7 +88,7 @@ class GeoChart extends React.Component {
       this.setState({
         selectedPatches: {
           "type": "FeatureCollection",
-          "features": patches.features.filter((feature) => selectedId.includes(feature.properties.OBJECTID))
+          "features": this.state.patches.features.filter((feature) => this.state.selectedId.includes(feature.properties.OBJECTID))
         }
       });
     }
