@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 const styles = {
     card: {
         position: "fixed",
-        overflow: "scroll",
+        overflowY: "scroll",
         height: "30vh",
         width: "30vW",
         margin: 10,
@@ -55,7 +55,7 @@ function SimpleCard(props) {
         console.log(node.sp_score);
         console.log(node.score);
         console.log(node.neighbor_A);
-        console.log(node.vcn_deegree_children);
+        console.log(node.vcn_degree_children[0]);
         console.log();
 
         return (
@@ -73,6 +73,7 @@ function SimpleCard(props) {
                         neighbour area:{node.neighbor_A}
                         <br />
                         children:{node.vcn_deegree_children}
+
                     </Typography>
                 </CardContent>
             </Card>
