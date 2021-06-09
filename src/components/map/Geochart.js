@@ -76,6 +76,11 @@ class GeoChart extends React.Component {
       return "patch";
     };
 
+    this.update = (state) => {
+      this.updateAppSetState(state);
+      this.setState(state);
+    }
+
   }
 
   componentDidMount() {
@@ -167,13 +172,13 @@ class GeoChart extends React.Component {
           let tempSelectedId = this.state.selectedId.slice();
           if (!this.state.selectedId.includes(id)) {
             tempSelectedId.push(id);
-            this.updateAppSetState({ selectedId: tempSelectedId });
+            this.update({ selectedId: tempSelectedId });
             event.target.classList.add("selected");
           }
           else {
             let index = this.state.selectedId.indexOf(id);
             tempSelectedId.splice(index, 1);
-            this.updateAppSetState({ selectedId: tempSelectedId });
+            this.update({ selectedId: tempSelectedId });
             event.target.classList.remove("selected");
           }
         });
