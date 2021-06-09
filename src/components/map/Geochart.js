@@ -183,6 +183,7 @@ class GeoChart extends React.Component {
       .each((feature, i) => {
         svg.append('circle')
           .attr("class", "circle network")
+          .attr("display", "none")
           .attr('cx', projection(getBoundingBoxCenter(feature.geometry))[0])
           .attr('cy', projection(getBoundingBoxCenter(feature.geometry))[1])
         //.attr('r', 3)
@@ -203,6 +204,7 @@ class GeoChart extends React.Component {
 
               svg.append("line")
                 .attr("class", "line network")
+                .attr("display", "none")
                 .attr("x1", x1)
                 .attr("y1", y1)
                 .attr("x2", x2)
