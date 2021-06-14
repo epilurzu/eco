@@ -4,6 +4,7 @@ import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
 import SimpleCard from "./SimpleCard";
 import SimpleMenu from "./SimpleMenu";
+import getStyleProperty from 'get-style-property';
 
 /**
  * Component that renders a map with 3 layers:
@@ -43,10 +44,49 @@ function getBoundingBoxCenter(geometry) {
   return [0, 0];
 }
 
-function show(className, isShowed) {
-  [...document.getElementsByClassName(className)].forEach((element, index) => {
-    isShowed ? element.style.display = "block" : element.style.display = "none";
-  });
+function show(className) {
+  if (className === "network") {
+    [...document.getElementsByClassName("patch")].forEach((element, index) => {
+      d3.select(element)
+        .style("fill", "#198d8c")
+    });
+
+    [...document.getElementsByClassName("network")].forEach((element, index) => {
+      if (getStyleProperty(element, "display") === "none") {
+        element.style.display = "block"
+      } else {
+        element.style.display = "none";
+      }
+    });
+  }
+  else {
+    [...document.getElementsByClassName("network")].forEach((element, index) => {
+      element.style.display = "none";
+    });
+
+    if (className == "patch") {
+      [...document.getElementsByClassName("patch")].forEach((element, index) => {
+        d3.select(element)
+          .style("fill", "#198d8c")
+      });
+    }
+    else {
+      [...document.getElementsByClassName("patch")].forEach((element, index) => {
+        d3.select(element)
+          .style("fill", "#198d8c")
+          .style("fill", (feature) => {
+            if (className === "patch-vcn-degree") {
+              var color = d3.scaleThreshold().domain([-2, -1, 0, null, 1, 2, 3]).range(d3.schemePuOr[7]);
+              return color(feature.properties.vcn_degree);
+            } else if (className === "sp-score") {
+              return d3.interpolateBlues(feature.properties.sp_score);
+            } else if (className === "score") {
+              return d3.interpolateReds(feature.properties.score);
+            }
+          })
+      });
+    }
+  }
 }
 
 class GeoChart extends React.Component {
@@ -69,11 +109,11 @@ class GeoChart extends React.Component {
       selectedCountry: null,
     };
 
-    this.isIdSelected = (feature) => {
+    this.isIdSelected = (feature, className) => {
       if (this.state.selectedId.includes(feature.properties.OBJECTID)) {
-        return "patch selected";
+        return className + " selected";
       }
-      return "patch";
+      return className;
     };
 
     this.update = (state) => {
@@ -164,8 +204,9 @@ class GeoChart extends React.Component {
         .join("path")
         .attr("data-id", (feature) => feature.properties.OBJECTID)
         .attr("data-centroid", (feature) => getBoundingBoxCenter(feature.geometry))
-        .attr("class", (feature) => this.isIdSelected(feature, this.state.selectedId))
+        .attr("class", (feature) => this.isIdSelected(feature, "patch"))
         .attr("d", (feature) => pathGenerator(feature))
+        .attr("fill", (feature) => "#198d8c")
         .on("click", (event) => {
           let id = parseInt(event.target.dataset.id);
 
@@ -223,7 +264,7 @@ class GeoChart extends React.Component {
 
   }
   componentDidUpdate() {
-    //document.title = `You clicked ${this.state.count} times`;
+
   }
 
   render() {

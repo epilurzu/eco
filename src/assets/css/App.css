@@ -76,10 +76,12 @@ svg .state {
 svg .area {
   fill: #a1d3bf;
 }
-
+/*
 svg .patch {
   fill: #198d8c;
 }
+*/
+
 svg .selected {
   fill: #ffa500 !important;
 }
