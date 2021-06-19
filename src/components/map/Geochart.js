@@ -3,6 +3,9 @@ import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import useResizeObserver from "./useResizeObserver";
 import SimpleCard from "./SimpleCard";
+import LegendVcnDegree from "./LegendVcnDegree";
+import LegendSpScore from "./LegendSpScore";
+import LegendScore from "./LegendScore";
 import SimpleMenu from "./SimpleMenu";
 import getStyleProperty from 'get-style-property';
 
@@ -45,6 +48,10 @@ function getBoundingBoxCenter(geometry) {
 }
 
 function show(className) {
+  [...document.getElementsByClassName("legend")].forEach((element, index) => {
+    element.style.display = "none";
+  });
+
   if (className === "network") {
     [...document.getElementsByClassName("patch")].forEach((element, index) => {
       d3.select(element)
@@ -76,7 +83,7 @@ function show(className) {
           .style("fill", "#198d8c")
           .style("fill", (feature) => {
             if (className === "patch-vcn-degree") {
-              var color = d3.scaleThreshold().domain([-2, -1, 0, null, 1, 2, 3]).range(d3.schemePuOr[7]);
+              var color = d3.scaleThreshold().domain([-2, -1, 0, 1, 2, 3]).range(d3.schemePuOr[7]);
               return color(feature.properties.vcn_degree);
             } else if (className === "sp-score") {
               return d3.interpolateBlues(feature.properties.sp_score);
@@ -84,6 +91,16 @@ function show(className) {
               return d3.interpolateReds(feature.properties.score);
             }
           })
+      });
+
+      document.getElementById("legend-" + className).style.display = "block";
+
+      [...document.getElementsByClassName("legend-svg")].forEach((svg, index) => {
+        // Get the bounds of the SVG content
+        var bbox = svg.getBBox();
+        // Update the width and height using the size of the contents
+        svg.style.width = bbox.x + bbox.width + bbox.x;
+        svg.style.width = bbox.y + bbox.height + bbox.y;
       });
     }
   }
@@ -133,26 +150,13 @@ class GeoChart extends React.Component {
       });
     }
 
-
-
-
-
-
     const dimensions = new ResizeObserver((entries) => {
       //do things
     });
 
     //console.log(dimensions);
     //console.log(this.wrapperRef);
-    dimensions.observe(document.getElementById("pippo"));
-
-
-
-
-
-
-
-
+    dimensions.observe(document.getElementById("map-container"));
 
     // use resized dimensions, but fall back to getBoundingClientRect, if no dimensions yet.
     const { width, height } =
@@ -269,9 +273,12 @@ class GeoChart extends React.Component {
 
   render() {
     return (
-      <div className={"map-container"} id={"pippo"} ref={this.wrapperRef}>
+      <div className={"map-container"} id={"map-container"} ref={this.wrapperRef}>
         <SimpleMenu show={show} />
         <SimpleCard patches={this.state.patches} selectedId={this.state.selectedId.slice()} updateAppSetState={this.updateAppSetState} />
+        <LegendVcnDegree />
+        <LegendSpScore />
+        <LegendScore />
         <svg className={"map"} ref={this.svgRef}></svg>
       </div>
     );
