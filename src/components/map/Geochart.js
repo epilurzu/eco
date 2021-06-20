@@ -100,7 +100,7 @@ function show(className) {
         var bbox = svg.getBBox();
         // Update the width and height using the size of the contents
         svg.style.width = bbox.x + bbox.width + bbox.x;
-        svg.style.width = bbox.y + bbox.height + bbox.y;
+        svg.style.height = bbox.y + bbox.height + bbox.y;
       });
     }
   }

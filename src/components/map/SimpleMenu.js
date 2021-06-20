@@ -1,11 +1,23 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+
+const styles = theme => ({
+    button: {
+        backgroundColor: "transparent"
+    }
+});
 
 class SimpleMenu extends React.Component {
     constructor(props) {
         super(props);
+
+        this.classes = this.props.classes;
 
         this.state = {
             anchorEl: null,
@@ -29,35 +41,43 @@ class SimpleMenu extends React.Component {
             this.setState({ anchorEl: event.currentTarget });
         };
 
+        this.handleRemove = event => {
+            this.props.show("patch");
+            this.resetState()
+            document.getElementById("Visibility").style.display = "block";
+            document.getElementById("VisibilityOff").style.display = "none";
+        };
+
         this.handleNeworkClick = () => {
-            let newValue = !this.state.networkIsShowed;
             this.props.show("network");
             this.resetState()
-            this.setState({ networkIsShowed: newValue });
+            document.getElementById("Visibility").style.display = "none";
+            document.getElementById("VisibilityOff").style.display = "block";
+            this.setState({ networkIsShowed: true });
         };
 
         this.handleVCNDegreeClick = () => {
-            let newValue = !this.state.vcnDegreeIsShowed;
-            let className = newValue ? "patch-vcn-degree" : "patch"
-            this.props.show(className);
+            this.props.show("patch-vcn-degree");
             this.resetState()
-            this.setState({ vcnDegreeIsShowed: newValue });
+            document.getElementById("Visibility").style.display = "none";
+            document.getElementById("VisibilityOff").style.display = "block";
+            this.setState({ vcnDegreeIsShowed: true });
         };
 
         this.handleCentralityClick = () => {
-            let newValue = !this.state.centralityIsShowed;
-            let className = newValue ? "sp-score" : "patch"
-            this.props.show(className);
+            this.props.show("sp-score");
             this.resetState()
-            this.setState({ centralityIsShowed: newValue });
+            document.getElementById("Visibility").style.display = "none";
+            document.getElementById("VisibilityOff").style.display = "block";
+            this.setState({ centralityIsShowed: true });
         };
 
         this.handleScoreClick = () => {
-            let newValue = !this.state.scoreIsShowed;
-            let className = newValue ? "score" : "patch"
-            this.props.show(className);
+            this.props.show("score");
             this.resetState()
-            this.setState({ scoreIsShowed: newValue });
+            document.getElementById("Visibility").style.display = "none";
+            document.getElementById("VisibilityOff").style.display = "block";
+            this.setState({ scoreIsShowed: true });
         };
 
     }
@@ -66,14 +86,22 @@ class SimpleMenu extends React.Component {
         const { anchorEl } = this.state;
 
         return (
-            <div className="showButton">
-                <Button
+            <div className={this.classes.button + " showButton"}>
+                <IconButton
+                    id={"Visibility"}
+                    className={"eye-button"}
                     aria-owns={anchorEl ? 'simple-menu' : null}
                     aria-haspopup="true"
-                    onClick={this.handleClick}
-                >
-                    Show
-                </Button>
+                    onClick={this.handleClick}>
+                    <VisibilityIcon />
+                </IconButton>
+                <IconButton
+                    id={"VisibilityOff"}
+                    className={"eye-button"}
+                    onClick={this.handleRemove}
+                    style={{ display: "none" }}>
+                    <VisibilityOffIcon />
+                </IconButton>
                 <Menu
                     id="simple-menu"
                     anchorEl={anchorEl}
@@ -81,7 +109,7 @@ class SimpleMenu extends React.Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.handleNeworkClick}>Network</MenuItem>
-                    <MenuItem onClick={this.handleVCNDegreeClick}>Virtual Cut Nodes</MenuItem>
+                    <MenuItem onClick={this.handleVCNDegreeClick}>Categories of Nodes</MenuItem>
                     <MenuItem onClick={this.handleCentralityClick}>Centrality</MenuItem>
                     <MenuItem onClick={this.handleScoreClick}>Score</MenuItem>
                 </Menu>
@@ -90,4 +118,4 @@ class SimpleMenu extends React.Component {
     }
 }
 
-export default SimpleMenu;
+export default withStyles(styles)(SimpleMenu);

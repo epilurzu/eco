@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
 import * as d3 from "d3";
 
 const styles = theme => ({
@@ -9,9 +10,13 @@ const styles = theme => ({
         height: "auto",
         width: "auto",
         margin: 10,
-        padding: "10px 10px 0px 10px",
+        padding: 10,
         right: 10,
         top: 119
+    },
+    title: {
+        fontSize: "0.9rem",
+        marginBottom: 10
     },
 });
 
@@ -56,11 +61,15 @@ class LegendVcnDegree extends React.Component {
             .text(function (d) { return d })
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
+            .style("font-size", 15)
     }
 
     render() {
         return (
             <Card id={"legend-patch-vcn-degree"} className={this.classes.card + " legend"} style={{ display: "none" }}>
+                <Typography className={this.classes.title}>
+                    Categories of Nodes
+                </Typography>
                 <svg id={"legend-patch-vcn-degree-svg"} className={"legend-svg"}></svg>
             </Card>
         );

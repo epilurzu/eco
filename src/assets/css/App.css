@@ -104,6 +104,10 @@ svg .state:hover,
   cursor: pointer;
 }
 
+.eye-button{
+  background-color: white !important;
+}
+
 .circle{
   /*stroke: #333333;*/
   /*stroke-width: 0.5px;*/
