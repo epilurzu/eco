@@ -194,3 +194,11 @@ table thead th .text{
     top: 2;
     width: 1;
 }
+
+tr .Mui-selected{
+  background-color: rgba(0, 148, 133, 0.1) !important;
+}
+
+.Mui-checked svg{
+  color: #009688 !important
+}
