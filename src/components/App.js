@@ -24,9 +24,9 @@ class CustomToolbar extends React.Component {
     console.log("-------------------------");
     return (
       <Toolbar>
-        { this.props.selectedId.length > 0 ? (
+        {this.props.selectedId.length > 0 ? (
           <Typography variant="h5" className="highlight">
-            {this.props.selectedId.length} selected
+            {this.props.selectedId.length} patches selected
           </Typography>
         ) : (
           <Typography variant="h5" className="text">

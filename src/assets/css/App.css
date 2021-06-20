@@ -41,8 +41,7 @@ div.App {
 
 .highlight {
   flexGrow: 1;
-  color: red;
-  backgroundColor: white;
+  color: #009688 !important
 }
 
 div .map-container {
@@ -95,8 +94,9 @@ svg .state,
   cursor: pointer;
 }
 
-svg .state:hover,
-.area:hover,
+svg
+/* .state:hover, */
+/* .area:hover, */
 .patch:hover {
   stroke: #ffa500;
   stroke-width: 2px;
@@ -195,7 +195,7 @@ table thead th .text{
     width: 1;
 }
 
-tr .Mui-selected{
+tbody .Mui-selected{
   background-color: rgba(0, 148, 133, 0.1) !important;
 }
 
