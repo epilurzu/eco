@@ -16,6 +16,18 @@ import getStyleProperty from 'get-style-property';
  *    corridor given as input.
  */
 
+function getSelectedPatches(selectedId, features) {
+  if (selectedId.length !== 0) {
+    return {
+      "type": "FeatureCollection",
+      "features": features.filter((feature) => selectedId.includes(feature.properties.OBJECTID))
+    }
+  }
+  else {
+    return null;
+  }
+}
+
 function getBoundingBoxCenter(geometry) {
   if (geometry != null) {
     let min_x = 1000;
@@ -122,8 +134,8 @@ class GeoChart extends React.Component {
     this.state = {
       selectedId: props.selectedId,
       patches: props.corridor !== null ? topojson.feature(props.corridor, props.corridor.objects[Object.keys(props.corridor.objects)[0]]) : null,
-      selectedPatches: null,
       selectedCountry: null,
+      selectedPatches: getSelectedPatches(props.selectedId, topojson.feature(props.corridor, props.corridor.objects[Object.keys(props.corridor.objects)[0]]).features)
     };
 
     this.isIdSelected = (feature, className) => {
@@ -141,14 +153,6 @@ class GeoChart extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.selectedId.length != 0) {
-      this.setState({
-        selectedPatches: {
-          "type": "FeatureCollection",
-          "features": this.state.patches.features.filter((feature) => this.state.selectedId.includes(feature.properties.OBJECTID))
-        }
-      });
-    }
 
     const dimensions = new ResizeObserver((entries) => {
       //do things
