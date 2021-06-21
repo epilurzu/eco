@@ -59,7 +59,7 @@ class EnhancedTableToolbar extends React.Component {
             <Toolbar>
                 <Typography variant="h6" id="tableTitle" component="div">
                     Table
-                    </Typography>
+                </Typography>
                 <Tooltip title="Filter list">
                     <IconButton aria-label="filter list">
                         <FilterListIcon />
@@ -286,6 +286,21 @@ class EnhancedTable extends React.Component {
         corridor.objects[corridorName].geometries.forEach(geometry => {
             [geometry.properties].forEach(property => {
                 let orderProperty = { OBJECTID: null, vcn_degree: null, sp_score: null, score: null };
+
+                // if (property.vcn_degree_children === undefined) {
+                //     property.vcn_degree_children = []
+                // }
+
+                // if (property.vcn_degree_children.length === 0) {
+                //     property.vcn_degree_children = "";
+                // }
+                // else {
+                //     if (typeof (property.vcn_degree_children) !== 'string')
+                //         property.vcn_degree_children = JSON.stringify(property.vcn_degree_children).replace(/\[|\[\[/g, "(").replace(/\]|\]\]/g, ")")
+                //     else
+                //         console.log(property)
+                // }
+
                 orderProperty = Object.assign(orderProperty, property);
                 rows.push(orderProperty);
             });
