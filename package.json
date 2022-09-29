@@ -42,7 +42,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
-    "d3": "^6.7.0",
+    "d3": "^7.6.1",
     "get-style-property": "^0.1.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
